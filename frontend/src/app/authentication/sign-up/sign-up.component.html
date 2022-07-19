@@ -1,0 +1,65 @@
+<div *ngIf="loading | async">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<section>
+    <!-- background Image -->
+    <div class="imgContainer">
+        <img src="https://cdni.iconscout.com/illustration/free/thumb/sign-up-form-4575543-3798675.png" alt="sign up">
+    </div>
+    <!-- Register Page -->
+    <div class="contentBox">
+        <div class="formBox">
+            <h2>Register</h2>
+            <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+                <p class="text-danger text-center text-capitalize" *ngIf="error">{{error}}</p>
+                <div class="inputBox">
+                    <span>Username</span>
+                    <input type="text" formControlName="name" placeholder="Enter Name"
+                        [ngClass]="{ 'is-invalid': submitted && signUpForm.get('name')?.errors}">
+                    <div *ngIf="submitted && signUpForm.get('name')?.errors" class="invalid-feedback">
+                        <div *ngIf="signUpForm.get('name')?.errors?.['required']">name is required</div>
+                        <div *ngIf="signUpForm.get('name')?.errors?.['pattern']">name is invalid</div>
+                    </div>
+                </div>
+                <div class="inputBox">
+                    <span>Email</span>
+                    <input type="email" formControlName="email" placeholder="Enter Email Address"
+                        [ngClass]="{ 'is-invalid': submitted && signUpForm.get('email')?.errors}">
+                    <div *ngIf="submitted && signUpForm.get('email')?.errors" class="invalid-feedback">
+                        <div *ngIf="signUpForm.get('email')?.errors?.['required']">Email is required</div>
+                        <div *ngIf="signUpForm.get('email')?.errors?.['pattern']">Email is invalid</div>
+                    </div>
+                </div>
+                <div class="inputBox">
+                    <span>Password</span>
+                    <input type="password" formControlName="password" placeholder="Enter password"
+                        [ngClass]="{ 'is-invalid': submitted && signUpForm.get('password')?.errors}">
+                    <div *ngIf="submitted && signUpForm.get('password')?.errors" class="invalid-feedback">
+                        <div *ngIf="signUpForm.get('password')?.errors?.['required']">Password is required</div>
+                        <div *ngIf="signUpForm.get('password')?.errors?.['minlength']">Password must be at least 8
+                            characters</div>
+                    </div>
+                </div>
+                <div class="inputBox">
+                    <span>Confirm Password</span>
+                    <input type="password" formControlName="confirmPassword" placeholder="Enter password"
+                        [ngClass]="{ 'is-invalid': submitted && signUpForm.get('confirmPassword')?.errors}">
+                    <div *ngIf="submitted && signUpForm.get('confirmPassword')?.errors" class="invalid-feedback">
+                        <div *ngIf="signUpForm.get('confirmPassword')?.errors?.['required']">Confirm Password is
+                            required
+                        </div>
+                        <div *ngIf="signUpForm.get('confirmPassword')?.errors?.['confirmedValidator']">Confirm Password
+                            is not matching</div>
+                    </div>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Sign up">
+                </div>
+                <div class="inputBox">
+                    <p>have an account? <a [routerLink]="['/sign-in']" routerLinkActive="router-link-active">Sign in</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

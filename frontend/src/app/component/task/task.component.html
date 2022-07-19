@@ -1,0 +1,136 @@
+<app-header></app-header>
+<div *ngIf="loading | async">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<div class="container taskContainer mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5 class="card-title text-capitalize">{{projectInfo?.project_name}}</h5>
+                <button class="btn btn-outline-primary" (click)="toggleButton('create')" data-bs-toggle="modal"
+                    data-bs-target="#createTask">Create
+                    Task</button>
+            </div>
+
+            <h6 class="card-subtitle mb-2 text-muted">{{projectInfo?.project_type}}</h6>
+            <p class="card-text">Last updated: {{projectInfo?.updatedAt | date :'dd/MM/yyyy'}}</p>
+        </div>
+    </div>
+
+    <!-- task table -->
+    <div class="table-responsive mt-3">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr class="text-center">
+                    <th>Employee Name</th>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Task Completed</th>
+                    <th>Created At</th>
+                    <th>Edit</th>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!tasks?.length">
+                    <td colspan="8" class="text-center">
+                        <b class="text-danger">NO Data</b>
+                    </td>
+                </tr>
+                <tr class="text-center" *ngFor="let task of tasks">
+                    <td>{{task.employee_name}}</td>
+                    <td>{{task.task_name}}</td>
+                    <td>{{task.description}}</td>
+                    <td>{{task.priority}}</td>
+                    <td><span *ngIf="!task.taskComplete" class="material-icons-outlined text-danger">close</span>
+                        <span *ngIf="task.taskComplete" class="material-icons-outlined text-success">
+                            done
+                        </span>
+                    </td>
+                    <td>{{task.createdAt | date :'dd/MM/yyyy'}}</td>
+                    <td><span (click)="patchTask(task);toggleButton('edit')" class="material-icons-outlined"
+                            data-bs-toggle="modal" data-bs-target="#createTask">
+                            edit
+                        </span></td>
+                    <td><span (click)="taskInfo(task._id)" class="material-icons-outlined text-danger"
+                            data-bs-toggle="modal" data-bs-target="#deleteTask">
+                            delete
+                        </span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createTask" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="createTaskLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTaskLabel">Create Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p *ngIf="error" class="text-danger">{{error}}*</p>
+                <form [formGroup]="taskForm">
+                    <div class="mb-3">
+                        <label for="projectName" class="form-label">Employee Name</label>
+                        <input type="text" formControlName="employee_name" class="form-control" id="projectName"
+                            aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectType" class="form-label">Task Name</label>
+                        <input type="text" formControlName="task_name" class="form-control" id="projectType">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lead" class="form-label">Description</label>
+                        <input type="text" formControlName="description" class="form-control" id="lead">
+                    </div>
+                    <div class="mb-3">
+                        <label for="priority" class="form-label">Priority</label>
+                        <select class="form-select" formControlName="priority" aria-label="Default select example">
+                            <option value="high">high</option>
+                            <option value="normal">normal</option>
+                            <option value="low">low</option>
+                        </select>
+                    </div>
+                    <div *ngIf="taskContainer" class="mb-3">
+                        <label *ngIf="taskContainer" for="taskComplete" class="form-label">Task Complete</label>
+                        <select (change)="taskComplete($event.target)" class="form-select"
+                            formControlName="taskComplete" aria-label="Task Complete">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" *ngIf="createBtn" class="btn btn-primary" (click)="createTask()">Create</button>
+                <button type="button" *ngIf="editBtn" class="btn btn-primary" (click)="editTask()">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteTask" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="deleteTaskLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Delete Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this task
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="deleteTask()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div *ngIf="loading | async">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<section>
+    <!-- background Image -->
+    <div class="imgContainer">
+        <img src="https://cdni.iconscout.com/illustration/premium/thumb/login-3305943-2757111.png" alt="sign in photo">
+    </div>
+    <!-- Login Page-->
+    <div class="contentBox">
+        <div class="formBox">
+            <h2>Login</h2>
+            <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+                <p class="text-danger text-center text-capitalize" *ngIf="error">{{error}}</p>
+                <div class="inputBox">
+                    <span>Email</span>
+                    <input type="email" formControlName="email" placeholder="Enter Email Address"
+                        [ngClass]="{ 'is-invalid': submitted && signInForm.get('email')?.errors}">
+                    <div *ngIf="submitted && signInForm.get('email')?.errors" class="invalid-feedback">
+                        <div *ngIf="signInForm.get('email')?.errors?.['required']">Email is required</div>
+                        <div *ngIf="signInForm.get('email')?.errors?.['pattern']">Email is invalid</div>
+                    </div>
+                </div>
+                <div class="inputBox">
+                    <span>Password</span>
+                    <input type="password" formControlName="password" placeholder="Enter password"
+                        [ngClass]="{ 'is-invalid': submitted && signInForm.get('password')?.errors}">
+                    <div *ngIf="submitted && signInForm.get('password')?.errors" class="invalid-feedback">
+                        <div *ngIf="signInForm.get('password')?.errors?.['required']">Password is required</div>
+                        <div *ngIf="signInForm.get('password')?.errors?.['minlength']">Password must be at least 8
+                            characters</div>
+                    </div>
+                </div>
+                <div class="remember">
+                    <label for="remember">
+                        <input type="checkbox" formControlName="keepMeLoggedIn">Remember me
+                    </label>
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Sign in">
+                </div>
+                <div class="inputBox">
+                    <p>Don't have an account? <a [routerLink]="['/sign-up']" routerLinkActive="router-link-active">Sign
+                            up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
